@@ -1,4 +1,7 @@
+from webdriver_manager.chrome import ChromeDriverManager 
+
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -8,6 +11,22 @@ import sys
 import time
 import socket
 import re
+
+#code for Chromedriver dynamic updates
+#from Selenium Chromedriver Solution https://www.youtube.com/watch?v=BnY4PZyL9cg
+service = Service()
+options = webdriver.ChromeOptions()
+driver = webdriver.Chrome(service = service, options = options)
+
+# Help WebDriver find the downloaded ChromeDriver executable (for 114 and earlier)
+# driver = webdriver.Chrome('/path/to/chromedriver')  # Optional argument, if not specified will search path.
+# driver.get('http://www.google.com/')
+# time.sleep(5) # Let the user actually see something!
+# search_box = driver.find_element_by_name('q')
+# search_box.send_keys('ChromeDriver')
+# search_box.submit()
+# time.sleep(5) # Let the user actually see something!
+# driver.quit()
 
 
 class SearchLinks:
@@ -22,7 +41,7 @@ class SearchLinks:
         self.options.add_argument(f'user-agent={self.ua_generator.chrome}')
         if ip:
             self.options.add_argument('--proxy-server=http://' + ip)
-        self.driver = webdriver.Chrome('resources/chromedriver', options=self.options)
+        self.driver = webdriver.Chrome(ChromeDriverManager(version="latest").install(), options=self.options) #updated this line for dynamic update
         self.driver.get('http://patents.google.com/advanced')
         self.prefix = 'https://patents.google.com/patent/'
         self.number_of_results = None
